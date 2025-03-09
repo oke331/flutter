@@ -135,6 +135,7 @@ class AnimatedCrossFade extends StatefulWidget {
     this.reverseDuration,
     this.layoutBuilder = defaultLayoutBuilder,
     this.excludeBottomFocus = true,
+    this.clipBehavior = Clip.hardEdge,
   });
 
   /// The child that is visible when [crossFadeState] is
@@ -211,6 +212,11 @@ class AnimatedCrossFade extends StatefulWidget {
   /// cross-fade animation.
   final bool excludeBottomFocus;
 
+  /// The clip behavior of the [AnimatedCrossFade].
+  ///
+  /// Defaults to [Clip.hardEdge].
+  final Clip clipBehavior;
+
   /// The default layout algorithm used by [AnimatedCrossFade].
   ///
   /// The top child is placed in a stack that sizes itself to match the top
@@ -258,6 +264,7 @@ class AnimatedCrossFade extends StatefulWidget {
         defaultValue: null,
       ),
     );
+    properties.add(EnumProperty<Clip>('clipBehavior', clipBehavior));
   }
 }
 
@@ -380,6 +387,7 @@ class _AnimatedCrossFadeState extends State<AnimatedCrossFade> with TickerProvid
       ),
     );
     return ClipRect(
+      clipBehavior: widget.clipBehavior,
       child: AnimatedSize(
         alignment: widget.alignment,
         duration: widget.duration,

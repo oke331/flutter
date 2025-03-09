@@ -396,6 +396,33 @@ void main() {
 
     expect(numberOfTouchEventNoticed, 1);
   });
+
+  testWidgets('AnimatedCrossFade respects clipBehavior', (WidgetTester tester) async {
+    Widget buildCrossFade(Clip clipBehavior) {
+      return Directionality(
+        textDirection: TextDirection.ltr,
+        child: AnimatedCrossFade(
+          firstChild: const SizedBox(width: 100.0, height: 100.0),
+          secondChild: const SizedBox(width: 100.0, height: 100.0),
+          duration: const Duration(milliseconds: 200),
+          crossFadeState: CrossFadeState.showFirst,
+          clipBehavior: clipBehavior,
+        ),
+      );
+    }
+
+    await tester.pumpWidget(buildCrossFade(Clip.hardEdge));
+    ClipRect clipRect = tester.widget<ClipRect>(find.byType(ClipRect));
+    expect(clipRect.clipBehavior, equals(Clip.hardEdge));
+
+    await tester.pumpWidget(buildCrossFade(Clip.antiAlias));
+    clipRect = tester.widget<ClipRect>(find.byType(ClipRect));
+    expect(clipRect.clipBehavior, equals(Clip.antiAlias));
+
+    await tester.pumpWidget(buildCrossFade(Clip.none));
+    clipRect = tester.widget<ClipRect>(find.byType(ClipRect));
+    expect(clipRect.clipBehavior, equals(Clip.none));
+  });
 }
 
 class _TickerWatchingWidget extends StatefulWidget {
